@@ -57,77 +57,81 @@
     <canvas id="constellationCanvas" style="position: fixed; top: 0; left: 0; z-index: 2; pointer-events: none;"></canvas>
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        particlesJS("particles-js", {
-            "particles": {
-                "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
-                "color": { "value": "#00f2ff" },
-                "shape": { "type": "circle" },
-                "opacity": { "value": 0.6, "random": false },
-                "size": { "value": 3, "random": true },
-                "line_linked": { "enable": true, "distance": 150, "color": "#7000ff", "opacity": 0.4, "width": 1 },
-                "move": { "enable": true, "speed": 1.5, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false }
-            },
-            "interactivity": {
-                "detect_on": "canvas",
-                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
-                "modes": { "grab": { "distance": 400, "line_linked": { "opacity": 1 } }, "push": { "particles_nb": 8 } }
-            },
-            "retina_detect": true
-        });
+        const isTouch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+        const largeScreen = window.innerWidth > 700;
 
-        const canvas = document.getElementById('constellationCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        let mouseX = window.innerWidth / 2;
-        let mouseY = window.innerHeight / 2;
-
-        const getParticles = () => {
-            if (window.pJSDom && window.pJSDom.length > 0) {
-                const pjs = window.pJSDom[0].pJS;
-                return pjs.particles.array || [];
-            }
-            return [];
-        };
-
-        const drawConstellation = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            const particles = getParticles();
-            
-            particles.forEach(particle => {
-                if (particle && particle.x && particle.y) {
-                    const dx = particle.x - mouseX;
-                    const dy = particle.y - mouseY;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    
-                    if (distance < 350) {
-                        const opacity = 1 - (distance / 350);
-                        ctx.strokeStyle = `rgba(0, 242, 255, ${opacity * 0.5})`;
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(mouseX, mouseY);
-                        ctx.lineTo(particle.x, particle.y);
-                        ctx.stroke();
-                    }
-                }
+        if(!isTouch && largeScreen){
+            particlesJS("particles-js", {
+                particles: {
+                    number: { value: 100, density: { enable: true, value_area: 800 } },
+                    color: { value: "#00f2ff" },
+                    shape: { type: "circle" },
+                    opacity: { value: 0.6, random: false },
+                    size: { value: 3, random: true },
+                    line_linked: { enable: true, distance: 150, color: "#7000ff", opacity: 0.4, width: 1 },
+                    move: { enable: true, speed: 1.5, direction: "none", random: true, straight: false, out_mode: "out", bounce: false }
+                },
+                interactivity: {
+                    detect_on: "canvas",
+                    events: { onhover: { enable: true, mode: "grab" }, onclick: { enable: true, mode: "push" }, resize: true },
+                    modes: { grab: { distance: 400, line_linked: { opacity: 1 } }, push: { particles_nb: 8 } }
+                },
+                retina_detect: true
             });
 
-            requestAnimationFrame(drawConstellation);
-        };
-
-        document.addEventListener('mousemove', (e) => {
-            mouseX = e.clientX;
-            mouseY = e.clientY;
-        });
-
-        window.addEventListener('resize', () => {
+            const canvas = document.getElementById('constellationCanvas');
+            const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
-        });
 
-        setTimeout(drawConstellation, 500);
+            let mouseX = window.innerWidth / 2;
+            let mouseY = window.innerHeight / 2;
+
+            const getParticles = () => {
+                if (window.pJSDom && window.pJSDom.length > 0) {
+                    const pjs = window.pJSDom[0].pJS;
+                    return pjs.particles.array || [];
+                }
+                return [];
+            };
+
+            const drawConstellation = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                const particles = getParticles();
+                particles.forEach(particle => {
+                    if (particle && particle.x && particle.y) {
+                        const dx = particle.x - mouseX;
+                        const dy = particle.y - mouseY;
+                        const distance = Math.sqrt(dx * dx + dy * dy);
+                        if (distance < 350) {
+                            const opacity = 1 - (distance / 350);
+                            ctx.strokeStyle = `rgba(0, 242, 255, ${opacity * 0.5})`;
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(mouseX, mouseY);
+                            ctx.lineTo(particle.x, particle.y);
+                            ctx.stroke();
+                        }
+                    }
+                });
+                requestAnimationFrame(drawConstellation);
+            };
+
+            document.addEventListener('mousemove', (e) => {
+                mouseX = e.clientX;
+                mouseY = e.clientY;
+            });
+
+            window.addEventListener('resize', () => {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            });
+
+            setTimeout(drawConstellation, 500);
+        } else {
+            const p = document.getElementById('particles-js'); if(p) p.style.display = 'none';
+            const c = document.getElementById('constellationCanvas'); if(c) c.style.display = 'none';
+        }
 
         // Navigate to PDF on Enter key anywhere
         document.addEventListener('keydown', (e) => {

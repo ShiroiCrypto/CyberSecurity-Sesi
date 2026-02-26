@@ -26,3 +26,28 @@ h1{font-family:Orbitron, Rajdhani, sans-serif; font-size:1.6rem; margin:0 0 12px
 @keyframes flash{0%{filter:grayscale(0)}50%{filter:grayscale(1)}100%{filter:grayscale(0)}}
 
 @media (max-width:520px){ .container{padding:18px} .cipher{font-size:1rem} h1{font-size:1.2rem} }
+
+/* Mobile friendly adjustments */
+@media (max-width:800px){
+	.container{ width:calc(100% - 28px); margin:12px; max-width:100%; padding:18px; border-radius:10px }
+	.hint-row{ flex-direction:column; gap:10px }
+	.input-row{ flex-direction:column; gap:10px }
+	.btn{ width:100%; padding:12px 14px }
+	.btn.primary, .btn.success{ padding:12px 14px }
+	.cipher{ font-size:1.05rem; padding:10px }
+	.timer{ font-size:1.3rem }
+	.input-row input{ width:100%; font-size:16px; padding:12px }
+	.controls .btn.link{ width:100% }
+}
+
+/* Make sure tap targets are large enough and avoid zoom on focus */
+input, button { touch-action: manipulation; -webkit-tap-highlight-color: rgba(0,0,0,0); }
+
+/* Small screens: ensure comfortable spacing */
+@media (max-width:420px){
+	h1{ font-size:1.05rem }
+	.story{ font-size:0.95rem }
+	.cipher{ font-size:0.95rem }
+	.timer{ font-size:1.15rem }
+	.container{ padding:14px }
+}
