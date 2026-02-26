@@ -3,134 +3,120 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Jogo: O Código do Invasor</title>
+  <title>SECTEAM | O Código do Invasor</title>
   <link rel="stylesheet" href="game.css">
   <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <main class="container">
-    <h1>🕵️ O Código do Invasor</h1>
+    <div class="header-scanline"></div>
+    <h1>🕵️ O CÓDIGO DO INVASOR</h1>
 
     <section class="scenario">
-      <p class="story">Um hacker invadiu o sistema do SESI e bloqueou as notas de todo mundo. Ele deixou 3 no site. Se a gente não resolver em <strong>5 minutos</strong>, o sistema formata e todo mundo fica com zero!</p>
+      <p class="story">
+        <strong>ALERTA DE INTRUSÃO:</strong> Um hacker bloqueou os servidores do SESI. 
+        Para liberar o acesso, decifre a mensagem abaixo antes que o tempo expire.
+      </p>
     </section>
 
     <section class="puzzle">
-      <label class="label">Enigma 1 — Cifra de César</label>
-      <div class="cipher">"DWLYH R GRLV IDWRUHV"</div>
+      <label class="label">ENIGMA 01 — Protocolo de Criptografia</label>
+      <div class="cipher" id="cipherText">"VHQKD VHJXUD"</div>
+      
       <div class="hint-row">
-        <button id="hintBtn" class="btn">Mostrar Dica</button>
-        <button id="startBtn" class="btn primary">Iniciar Contagem</button>
+        <button id="hintBtn" class="btn">SOLICITAR DICA</button>
+        <button id="startBtn" class="btn primary">INICIAR CONTAGEM</button>
       </div>
 
       <div class="timer" id="timer">05:00</div>
 
       <div class="input-row">
-        <input id="answer" placeholder="Digite a frase decodificada aqui" autocomplete="off">
-        <button id="submitBtn" class="btn success">Enviar</button>
+        <input type="text" id="answerInput" placeholder="Digite a mensagem decifrada..." autocomplete="off">
+        <button id="submitBtn" class="btn success">ENVIAR</button>
       </div>
-
-      <div id="feedback" class="feedback"></div>
+      <p id="feedback" class="feedback"></p>
     </section>
-
-    <footer class="controls">
-      <a href="index.html" class="btn link">Voltar ao Início</a>
-    </footer>
   </main>
 
   <script>
-    // Game logic
-    const hintBtn = document.getElementById('hintBtn');
-    const startBtn = document.getElementById('startBtn');
-    const submitBtn = document.getElementById('submitBtn');
-    const answerInput = document.getElementById('answer');
-    const feedback = document.getElementById('feedback');
     const timerEl = document.getElementById('timer');
+    const startBtn = document.getElementById('startBtn');
+    const hintBtn = document.getElementById('hintBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const answerInput = document.getElementById('answerInput');
+    const feedback = document.getElementById('feedback');
 
+    let timeLeft = 300; // 5 minutos
     let timer = null;
-    let timeLeft = 300; // 5 minutes in seconds
     let started = false;
 
-    function resetTimer(){
-      // clear any existing interval then reset and start counting
-      if(timer) clearInterval(timer);
+    function formatTime(s) {
+      const min = Math.floor(s / 60);
+      const sec = s % 60;
+      return `${min.toString().padStart(2, '0')}:${sec.toString().padStart(2, '0')}`;
+    }
+
+    function tick() {
+      if (timeLeft <= 0) {
+        clearInterval(timer);
+        feedback.className = 'feedback fail';
+        feedback.textContent = 'SISTEMA FORMATADO. ACESSO NEGADO.';
+        return;
+      }
+      timeLeft--;
+      timerEl.textContent = formatTime(timeLeft);
+    }
+
+    function resetTimer() {
+      clearInterval(timer);
       timeLeft = 300;
       timerEl.textContent = formatTime(timeLeft);
-      // start timer automatically so the player won't lose
-      timer = setInterval(tick, 1000);
+      started = false;
+      startBtn.disabled = false;
+      startBtn.textContent = 'REINICIAR CONTAGEM';
+    }
+
+    startBtn.addEventListener('click', () => {
+      if (started) return;
       started = true;
+      timer = setInterval(tick, 1000);
       startBtn.disabled = true;
-      startBtn.textContent = 'Contando...';
-      // small feedback pulse
-      feedback.className = 'feedback warn';
-      feedback.textContent = 'Cronômetro reiniciado — continue tentando.';
-      setTimeout(()=>{ if(feedback.className==='feedback warn') feedback.textContent = ''; }, 2200);
+      startBtn.textContent = 'OPERACIONAL...';
+    });
+
+    hintBtn.addEventListener('click', () => {
+      alert("DICA DO SISTEMA: O hacker usou a Cifra de César. Volte 3 casas no alfabeto (Ex: D vira A).");
+    });
+
+    function normalizeText(t) {
+      return t.toUpperCase().replace(/[^A-Z0-9]/g, '').trim();
     }
 
-    function formatTime(s){
-      const mm = String(Math.floor(s/60)).padStart(2,'0');
-      const ss = String(s%60).padStart(2,'0');
-      return `${mm}:${ss}`;
-    }
-
-    function tick(){
-      timeLeft--; timerEl.textContent = formatTime(timeLeft);
-      if(timeLeft <= 0){
-        // instead of failing, reset the timer so players can't 'lose'
+    submitBtn.addEventListener('click', () => {
+      if (!started) {
         feedback.className = 'feedback warn';
-        feedback.textContent = 'Tempo esgotado — reiniciando o cronômetro.';
-        if(timer) clearInterval(timer);
-        setTimeout(()=>{ resetTimer(); }, 900);
+        feedback.textContent = 'Inicie o cronômetro primeiro!';
+        return;
       }
-    }
 
-    function onSuccess(){
-      clearInterval(timer);
-      feedback.className = 'feedback success';
-      feedback.textContent = 'CORRETO — 2FA ATIVADO! Sistema protegido.';
-      document.body.classList.add('success-mode');
-    }
-
-    hintBtn.addEventListener('click', ()=>{
-      alert('Dica: O hacker voltou 3 casas no alfabeto. (A vira X, B vira Y, C vira Z)');
-    });
-
-    startBtn.addEventListener('click', ()=>{
-      if(started) return resetTimer();
-      started = true;
-      timer = setInterval(tick, 1000);
-      timerEl.textContent = formatTime(timeLeft);
-      startBtn.disabled = true;
-      startBtn.textContent = 'Contando...';
-    });
-
-    // helper: normalize and check answer
-    function normalizeText(t){
-      return t.toUpperCase().replace(/[^A-Z0-9\s]/g,'').replace(/\s+/g,' ').trim();
-    }
-
-    function checkAnswer(user){
-      const norm = normalizeText(user);
-      // Accept answers containing the key words: ATIVE, DOIS, FATORES
-      if(norm.includes('ATIVE') && (norm.includes('DOIS') || norm.includes('2')) && norm.includes('FATORES')) return true;
-      // also accept full decoded phrase without spaces
-      if(norm.replace(/\s/g,'') === 'ATIVEODOISFATORES') return true;
-      return false;
-    }
-
-    submitBtn.addEventListener('click', ()=>{
-      const val = answerInput.value || '';
-      if(!started){ feedback.className='feedback warn'; feedback.textContent='Clique em "Iniciar Contagem" antes de enviar.'; return; }
-      if(checkAnswer(val)) onSuccess(); else { 
-        feedback.className='feedback fail';
-        feedback.textContent='Incorreto — tempo reiniciado, tente novamente.'; 
-        // reset timer to give more chances
-        resetTimer();
+      const val = normalizeText(answerInput.value);
+      // A resposta correta é SENHA SEGURA
+      if (val === "SENHASEGURA") {
+        clearInterval(timer);
+        feedback.className = 'feedback success-msg';
+        feedback.textContent = 'ACESSO CONCEDIDO! Sistema Seguro.';
+        document.body.style.boxShadow = "inset 0 0 100px rgba(0, 242, 255, 0.2)";
+      } else {
+        feedback.className = 'feedback fail';
+        feedback.textContent = 'CÓDIGO INCORRETO. Tente novamente!';
+        answerInput.value = '';
       }
     });
 
-    // allow Enter to submit
-    answerInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') submitBtn.click(); });
+    // Permitir enviar com a tecla Enter
+    answerInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') submitBtn.click();
+    });
   </script>
 </body>
 </html>
