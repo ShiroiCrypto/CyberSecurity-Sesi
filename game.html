@@ -29,7 +29,7 @@
         <button id="startBtn" class="btn primary">INICIAR CONTAGEM</button>
       </div>
 
-      <div class="timer" id="timer">05:00</div>
+      <div class="timer" id="timer">15:00</div>
 
       <div class="input-row">
         <input type="text" id="answerInput" placeholder="Digite a mensagem decifrada..." autocomplete="off">
@@ -47,7 +47,7 @@
     const answerInput = document.getElementById('answerInput');
     const feedback = document.getElementById('feedback');
 
-    let timeLeft = 300; // 5 minutos
+    let timeLeft = 900; // 5 minutos
     let timer = null;
     let started = false;
 
@@ -70,7 +70,7 @@
 
     function resetTimer() {
       clearInterval(timer);
-      timeLeft = 300;
+      timeLeft = 900;
       timerEl.textContent = formatTime(timeLeft);
       started = false;
       startBtn.disabled = false;
