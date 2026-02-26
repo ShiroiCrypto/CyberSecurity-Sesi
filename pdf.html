@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width,initial-scale=1">
+	<title>Segurança na Internet — Palestra (PDF)</title>
+	<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Rajdhani:wght@400;600&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="pdf.css">
+    
+</head>
+<body>
+	<header>
+		<div class="top-left">
+			<a class="cmd-back" href="index.html"><span class="kbd">ESC</span> TERMINATE_SESSION</a>
+		</div>
+		<h1>Segurança na Internet — Palestra</h1>
+	</header>
+
+	<main>
+		<section class="viewer-wrap">
+			<div class="glass-frame">
+				<div class="neon-border"></div>
+				<div class="decrypt-overlay" id="decryptOverlay">
+					<div class="decrypt-title">Descriptografando Arquivo</div>
+					<div class="progress">
+						<div class="progress-bar" id="progressBar"></div>
+					</div>
+					<div class="progress-percent" id="progressPercent">0%</div>
+				</div>
+				<div class="pdf-frame" id="pdfFrame">
+					<iframe src="assets/pdf1.pdf" title="Segurança na Internet" frameborder="0" id="pdfIframe"></iframe>
+					<div class="scanlines"></div>
+				</div>
+			</div>
+		</section>
+
+		<div class="actions">
+			<a class="cmd-download" href="assets/pdf1.pdf" download>⬇ SECURE_DOWNLOAD</a>
+		</div>
+	</main>
+
+	<script>
+	document.addEventListener('DOMContentLoaded', function(){
+		const bar = document.getElementById('progressBar');
+		const pct = document.getElementById('progressPercent');
+		const overlay = document.getElementById('decryptOverlay');
+		const pdfFrame = document.getElementById('pdfFrame');
+		let progress = 0;
+		const duration = 3500; // ms
+		const step = 50; // ms
+		const increments = duration / step;
+		const delta = 100 / increments;
+		const t = setInterval(()=>{
+			progress = Math.min(100, progress + delta);
+			bar.style.width = progress + '%';
+			pct.textContent = Math.floor(progress) + '%';
+			if(progress >= 100){
+				clearInterval(t);
+				overlay.classList.add('done');
+				setTimeout(()=>{ overlay.style.opacity = '0'; overlay.style.pointerEvents = 'none'; pdfFrame.classList.add('visible'); }, 300);
+			}
+		}, step);
+
+		// ESC keyboard shortcut to go back
+		document.addEventListener('keydown', function(e){ if(e.key === 'Escape'){ window.location.href = 'index.html'; }});
+	});
+	</script>
+</body>
+</html>
+

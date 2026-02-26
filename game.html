@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Jogo: O Código do Invasor</title>
+  <link rel="stylesheet" href="game.css">
+  <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;600&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <main class="container">
+    <h1>🕵️ O Código do Invasor</h1>
+
+    <section class="scenario">
+      <p class="story">Um hacker invadiu o sistema do SESI e bloqueou as notas de todo mundo. Ele deixou 3 no site. Se a gente não resolver em <strong>5 minutos</strong>, o sistema formata e todo mundo fica com zero!</p>
+    </section>
+
+    <section class="puzzle">
+      <label class="label">Enigma 1 — Cifra de César</label>
+      <div class="cipher">"DWLYH R GRLV IDWRUHV"</div>
+      <div class="hint-row">
+        <button id="hintBtn" class="btn">Mostrar Dica</button>
+        <button id="startBtn" class="btn primary">Iniciar Contagem</button>
+      </div>
+
+      <div class="timer" id="timer">05:00</div>
+
+      <div class="input-row">
+        <input id="answer" placeholder="Digite a frase decodificada aqui" autocomplete="off">
+        <button id="submitBtn" class="btn success">Enviar</button>
+      </div>
+
+      <div id="feedback" class="feedback"></div>
+    </section>
+
+    <footer class="controls">
+      <a href="index.html" class="btn link">Voltar ao Início</a>
+    </footer>
+  </main>
+
+  <script>
+    // Game logic
+    const hintBtn = document.getElementById('hintBtn');
+    const startBtn = document.getElementById('startBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    const answerInput = document.getElementById('answer');
+    const feedback = document.getElementById('feedback');
+    const timerEl = document.getElementById('timer');
+
+    let timer = null;
+    let timeLeft = 300; // 5 minutes in seconds
+    let started = false;
+
+    function resetTimer(){
+      // clear any existing interval then reset and start counting
+      if(timer) clearInterval(timer);
+      timeLeft = 300;
+      timerEl.textContent = formatTime(timeLeft);
+      // start timer automatically so the player won't lose
+      timer = setInterval(tick, 1000);
+      started = true;
+      startBtn.disabled = true;
+      startBtn.textContent = 'Contando...';
+      // small feedback pulse
+      feedback.className = 'feedback warn';
+      feedback.textContent = 'Cronômetro reiniciado — continue tentando.';
+      setTimeout(()=>{ if(feedback.className==='feedback warn') feedback.textContent = ''; }, 2200);
+    }
+
+    function formatTime(s){
+      const mm = String(Math.floor(s/60)).padStart(2,'0');
+      const ss = String(s%60).padStart(2,'0');
+      return `${mm}:${ss}`;
+    }
+
+    function tick(){
+      timeLeft--; timerEl.textContent = formatTime(timeLeft);
+      if(timeLeft <= 0){
+        // instead of failing, reset the timer so players can't 'lose'
+        feedback.className = 'feedback warn';
+        feedback.textContent = 'Tempo esgotado — reiniciando o cronômetro.';
+        if(timer) clearInterval(timer);
+        setTimeout(()=>{ resetTimer(); }, 900);
+      }
+    }
+
+    function onSuccess(){
+      clearInterval(timer);
+      feedback.className = 'feedback success';
+      feedback.textContent = 'CORRETO — 2FA ATIVADO! Sistema protegido.';
+      document.body.classList.add('success-mode');
+    }
+
+    hintBtn.addEventListener('click', ()=>{
+      alert('Dica: O hacker voltou 3 casas no alfabeto. (A vira X, B vira Y, C vira Z)');
+    });
+
+    startBtn.addEventListener('click', ()=>{
+      if(started) return resetTimer();
+      started = true;
+      timer = setInterval(tick, 1000);
+      timerEl.textContent = formatTime(timeLeft);
+      startBtn.disabled = true;
+      startBtn.textContent = 'Contando...';
+    });
+
+    // helper: normalize and check answer
+    function normalizeText(t){
+      return t.toUpperCase().replace(/[^A-Z0-9\s]/g,'').replace(/\s+/g,' ').trim();
+    }
+
+    function checkAnswer(user){
+      const norm = normalizeText(user);
+      // Accept answers containing the key words: ATIVE, DOIS, FATORES
+      if(norm.includes('ATIVE') && (norm.includes('DOIS') || norm.includes('2')) && norm.includes('FATORES')) return true;
+      // also accept full decoded phrase without spaces
+      if(norm.replace(/\s/g,'') === 'ATIVEODOISFATORES') return true;
+      return false;
+    }
+
+    submitBtn.addEventListener('click', ()=>{
+      const val = answerInput.value || '';
+      if(!started){ feedback.className='feedback warn'; feedback.textContent='Clique em "Iniciar Contagem" antes de enviar.'; return; }
+      if(checkAnswer(val)) onSuccess(); else { 
+        feedback.className='feedback fail';
+        feedback.textContent='Incorreto — tempo reiniciado, tente novamente.'; 
+        // reset timer to give more chances
+        resetTimer();
+      }
+    });
+
+    // allow Enter to submit
+    answerInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') submitBtn.click(); });
+  </script>
+</body>
+</html>

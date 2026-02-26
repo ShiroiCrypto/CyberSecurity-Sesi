@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SECTEAM | Cyber Defense</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="particles-js"></div>
+    <div class="scanline"></div>
+
+    <div class="main-wrapper">
+        <div class="logo-container">
+            <p style="color: #555;">[ INICIANDO PROTOCOLO DE DEFESA SESI ]</p>
+            <h1>SECTEAM</h1>
+            <div class="glitch-text">Security & Cryptography Unit</div>
+        </div>
+
+        <div class="team-section">
+            <div class="dev-card">
+                <span class="dev-role">Full Stack</span>
+                <div class="dev-name">Davi Moreno</div>
+                <div class="nickname">Retr0</div>
+            </div>
+
+            <div class="dev-card">
+                <span class="dev-role">Back-End</span>
+                <div class="dev-name">Matheus Vieira</div>
+                <div class="nickname">Shiroi_Crypto</div>
+            </div>
+
+            <div class="dev-card">
+                <span class="dev-role">Lead Teacher</span>
+                <div class="dev-name">Juliano Silva</div>
+                <div class="nickname">Juliano_Silva</div>
+            </div>
+
+            <div class="dev-card">
+                <span class="dev-role">Front-End</span>
+                <div class="dev-name">Gabriel Oliveira</div>
+                <div class="nickname">Chilling</div>
+            </div>
+        </div>
+
+        <div style="margin-top: 50px; color: rgba(255,255,255,0.3); font-size: 0.9rem;">
+            PRESS [F11] FOR FULLSCREEN EXPERIENCE
+        </div>
+
+        <div style="margin-top: 30px; display:flex; gap:12px; justify-content:center;">
+            <a href="pdf.html" id="openPdfBtn" class="open-pdf btn-neon" role="button" tabindex="0" aria-label="Abrir palestra Segurança na Internet">Abrir palestra: Segurança na Internet (PDF)</a>
+            <a href="game.html" id="openGameBtn" class="open-game btn-neon" role="button" tabindex="0" aria-label="Jogo: O Código do Invasor">Jogo: O Código do Invasor</a>
+        </div>
+    </div>
+
+    <canvas id="constellationCanvas" style="position: fixed; top: 0; left: 0; z-index: 2; pointer-events: none;"></canvas>
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        particlesJS("particles-js", {
+            "particles": {
+                "number": { "value": 100, "density": { "enable": true, "value_area": 800 } },
+                "color": { "value": "#00f2ff" },
+                "shape": { "type": "circle" },
+                "opacity": { "value": 0.6, "random": false },
+                "size": { "value": 3, "random": true },
+                "line_linked": { "enable": true, "distance": 150, "color": "#7000ff", "opacity": 0.4, "width": 1 },
+                "move": { "enable": true, "speed": 1.5, "direction": "none", "random": true, "straight": false, "out_mode": "out", "bounce": false }
+            },
+            "interactivity": {
+                "detect_on": "canvas",
+                "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": true, "mode": "push" }, "resize": true },
+                "modes": { "grab": { "distance": 400, "line_linked": { "opacity": 1 } }, "push": { "particles_nb": 8 } }
+            },
+            "retina_detect": true
+        });
+
+        const canvas = document.getElementById('constellationCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        let mouseX = window.innerWidth / 2;
+        let mouseY = window.innerHeight / 2;
+
+        const getParticles = () => {
+            if (window.pJSDom && window.pJSDom.length > 0) {
+                const pjs = window.pJSDom[0].pJS;
+                return pjs.particles.array || [];
+            }
+            return [];
+        };
+
+        const drawConstellation = () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            const particles = getParticles();
+            
+            particles.forEach(particle => {
+                if (particle && particle.x && particle.y) {
+                    const dx = particle.x - mouseX;
+                    const dy = particle.y - mouseY;
+                    const distance = Math.sqrt(dx * dx + dy * dy);
+                    
+                    if (distance < 350) {
+                        const opacity = 1 - (distance / 350);
+                        ctx.strokeStyle = `rgba(0, 242, 255, ${opacity * 0.5})`;
+                        ctx.lineWidth = 1;
+                        ctx.beginPath();
+                        ctx.moveTo(mouseX, mouseY);
+                        ctx.lineTo(particle.x, particle.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+
+            requestAnimationFrame(drawConstellation);
+        };
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX;
+            mouseY = e.clientY;
+        });
+
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+
+        setTimeout(drawConstellation, 500);
+
+        // Navigate to PDF on Enter key anywhere
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter'){
+                const btn = document.getElementById('openPdfBtn');
+                if(btn) window.location.href = btn.href;
+            }
+        });
+
+        // Space activates CTA when focused
+        const openBtn = document.getElementById('openPdfBtn');
+        if(openBtn){
+            openBtn.addEventListener('keydown', (e)=>{
+                if(e.code === 'Space' || e.key === ' ' || e.key === 'Spacebar'){
+                    e.preventDefault();
+                    window.location.href = openBtn.href;
+                }
+            });
+        }
+    </script>
+</body>
+</html>
