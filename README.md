@@ -1,81 +1,67 @@
-# 🛡️ SECTEAM — Cyber Defense Unit
+# 🛡️ SECTEAM — Cyber Defense Unit (SESI)
 
-### ⚡ Protocolo de Visualização de Defesa Cibernética
-
-Este é o projeto oficial da **SECTEAM** para a palestra no **SESI**. Ele consiste em uma interface de terminal de elite projetada para apresentar documentos de segurança com imersão total no estilo *Cyberpunk/High-Tech*.
+Este repositório contém o ecossistema digital desenvolvido para a nossa palestra sobre **Segurança na Internet** realizada no **SESI**. O projeto mistura design imersivo, ferramentas de apoio e uma experiência interativa de gamificação.
 
 ---
 
-## 🚀 Funcionalidades do Sistema
+## 🚀 O Projeto
 
-### 🖥️ Interface de Comando (Landing Page)
+O sistema foi projetado para simular um ambiente de defesa cibernética de alta tecnologia, composto por:
 
-* **Ambiente Imersivo:** Fundo dinâmico com `particles.js` e efeito de interferência (*Scanlines*).
-* **Interação Avançada:** Cursor customizado com efeito *ripple*, trilha e magnetismo nos elementos.
-* **Acesso Rápido:** Atalho de teclado `ENTER` para iniciar o protocolo de leitura.
+1. **Terminal de Entrada (`index.html`):** Landing page com efeitos de partículas e interface de comando.
+2. **Central de Documentos (`pdf.html`):** Visualizador de slides com design *Glassmorphism*.
+3. **Operação Invasor SESI (`game.html`):** Um jogo de decodificação em tempo real com visual **Matrix Digital Rain**.
 
-### 📄 Visualizador de Documentos (PDF Reader)
+---
 
-* **Interface HUD:** Design em *Glassmorphism* com bordas neon (Cyan & Roxo).
-* **Simulação de Descriptografia:** Barra de progresso animada simulando o carregamento de arquivos sigilosos.
-* **Comandos de Operador:**
-* `[ ESC ] TERMINATE_SESSION` para retornar.
-* `SECURE_DOWNLOAD` para baixar o material oficial.
+## 🎮 O Jogo: O Código do Invasor
 
+Para engajar a turma durante a palestra, criamos um desafio prático de criptografia.
 
+* **O Cenário:** Um hacker bloqueou os sistemas do SESI. Os alunos têm 5 minutos para decifrar a mensagem antes da formatação dos dados.
+* **O Enigma:** Uma mensagem criptografada em **Cifra de César (N=3)**.
+* **Visual:** Interface inspirada em Matrix, com chuva de códigos em tempo real e cronômetro de urgência.
 
 ---
 
 ## 🛠️ Especificações Técnicas
 
-* **Paleta de Cores:** * Fundo: `#050505` (Deep Black)
-* Primária: `#00f2ff` (Cyber Cyan)
-* Secundária: `#7000ff` (Electric Purple)
+* **Linguagens:** HTML5, CSS3, JavaScript (Vanilla).
+* **Efeitos:** * **Canvas API:** Responsável pelo efeito de chuva digital no jogo.
+* **Particles.js:** Fundo dinâmico da página principal.
 
 
-* **Tipografia:** `Orbitron` e `Rajdhani` (via Google Fonts).
-* **Bibliotecas:** `particles.js` (Efeitos de partículas).
+* **Tipografia:** `Orbitron` e `Rajdhani` (Google Fonts).
 
 ---
 
-## 📁 Estrutura de Arquivos
+## 👥 Equipe SECTEAM
 
-```bash
-├── index.html       # Portal de entrada e autenticação
-├── pdf.html         # Terminal de leitura de documentos
-├── pdf.css          # Estilos do visualizador (Glassmorphism)
-├── style.css        # Core design e física do cursor
-└── assets/          # Repositório de arquivos PDF e recursos
+O desenvolvimento deste projeto foi realizado pelos seguintes integrantes:
 
-```
+* **Gabriel Oliveira** — Security Analyst & UI Design.
+* **Davi Moreno** (Retr0) — Full Stack Developer.
+* **Matheus Vieira** (Shiroi_Crypto) — Back-End Developer.
+* **Juliano Silva** — Lead Advisor / Teacher.
 
 ---
 
 ## ⚙️ Operação Local
 
-Para rodar o terminal em sua máquina, execute um servidor local para evitar bloqueios de segurança do navegador:
+Para rodar o projeto e o jogo:
 
-**Via Python:**
-
-```bash
-python -m http.server 8000
-
-```
-
-Acesse em: `http://localhost:8000`
-
-**Atalhos de Teclado:**
-
-* `ENTER` na Landing → Inicia Protocolo.
-* `ESC` no Leitor → Encerra Sessão.
-* `SPACE` → Ativa botões focados.
+1. Clone o repositório ou baixe os arquivos.
+2. Recomenda-se o uso de um servidor local (como a extensão *Live Server* do VS Code ou `python -m http.server`).
+3. Acesse `index.html` para a experiência completa.
 
 ---
 
 ## 📜 Licença
 
-Este projeto está sob a licença **MIT**. Sinta-se livre para clonar, modificar e distribuir, mantendo os créditos da **SECTEAM**.
+Este projeto está sob a licença **MIT**. Você pode usar, modificar e distribuir este código, desde que mantenha os créditos da equipe original.
 
 ---
 
-> **Aviso de Segurança:** Este software é uma interface demonstrativa para fins educacionais no SESI.
+> **"Segurança não é um produto, mas um processo."** — SECTEAM 2026.
+
+---
